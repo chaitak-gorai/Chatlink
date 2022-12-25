@@ -2,6 +2,8 @@ import bot from './assets/bot.svg'
 import user from './assets/user.svg'
 const form = document.querySelector('form')
 const chatContainer = document.querySelector('#chat_container')
+const recordBtn = document.querySelector('#record')
+
 let loadInterval
 function loader(element) {
   element.textContent = ''
@@ -103,3 +105,34 @@ form.addEventListener('keyup', (e) => {
     handleSubmit(e)
   }
 })
+
+recordBtn.addEventListener('click', () => {
+  record()
+})
+function record() {
+  const uniqueId = generateUniqueId()
+  chatContainer.innerHTML += chatStripe(false, ' ', uniqueId)
+
+  // to focus scroll to the bottom
+  chatContainer.scrollTop = chatContainer.scrollHeight
+
+  // specific message div
+  const messageDiv = document.getElementById(uniqueId)
+
+  // messageDiv.innerHTML = "..."
+  loader(messageDiv)
+  var recognition = new webkitSpeechRecognition()
+  recognition.continuous = false
+  recognition.interimResults = false
+
+  recognition.lang = 'en-US'
+  recognition.start()
+
+  recognition.onresult = function (e) {
+    console.log(e.results[0][0].transcript)
+    document.getElementById('pmpt').value = e.results[0][0].transcript
+    recognition.stop()
+    document.getElementById(uniqueId).parentElement.parentElement.remove()
+    handleSubmit(e)
+  }
+}
