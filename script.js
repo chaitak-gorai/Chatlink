@@ -60,18 +60,15 @@ const handleSubmit = async (e) => {
   chatContainer.scrollTop = chatContainer.scrollHeight
   const messageDiv = document.getElementById(uniqueId)
   loader(messageDiv)
-  const response = await fetch(
-    'https://arctic-cocoa-343220.el.r.appspot.com/',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: data.get('prompt'),
-      }),
-    }
-  )
+  const response = await fetch('https://chatlink.herokuapp.com/highTemp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt: data.get('prompt'),
+    }),
+  })
   clearInterval(loadInterval)
   messageDiv.innerHTML = ''
   if (response.ok) {
